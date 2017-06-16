@@ -8,7 +8,7 @@ using MySql.Data;
 
 namespace API
 {
-    public class MessagePer
+    public class MessagePer 
     {
             private MySql.Data.MySqlClient.MySqlConnection connection2;
 
