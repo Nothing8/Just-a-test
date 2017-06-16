@@ -86,31 +86,10 @@ namespace ChatProgram
             client.BaseAddress = new Uri("http://localhost:16590/");
             HttpResponseMessage response = client.GetAsync("api/User").Result;
             userlist = response.Content.ReadAsAsync<List<UserClass>>().Result;
-        }
+        
 
 
-
-        //static async Task Async()
-        //{
-        //    using (var client = new HttpClient())
-        //    {
-
-
-        //        client.BaseAddress = new Uri("http://localhost:16590/");
-        //        client.DefaultRequestHeaders.Accept.Clear();
-        //        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-
-        //        HttpResponseMessage response = await client.GetAsync("api/User");
-        //        if (response.IsSuccessStatusCode)
-        //        {
-        //            List<UserClass> users = await response.Content.ReadAsAsync<List<UserClass>>();
-
-        //        } 
-
-        //    }
-
-        ////}
+        
 
         private void Form1_Load(object sender, EventArgs e)
         {
