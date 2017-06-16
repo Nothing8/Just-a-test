@@ -78,7 +78,7 @@ namespace ChatProgram
                     }
                 }
             }
-        
+
 
         private void UserLoad()
         {
@@ -86,7 +86,7 @@ namespace ChatProgram
             client.BaseAddress = new Uri("http://localhost:16590/");
             HttpResponseMessage response = client.GetAsync("api/User").Result;
             userlist = response.Content.ReadAsAsync<List<UserClass>>().Result;
-        
+        }
 
 
         
