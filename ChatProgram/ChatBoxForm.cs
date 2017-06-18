@@ -195,6 +195,7 @@ namespace ChatProgram
         { 
 
 
+
             MessageClass updatedMessage = new MessageClass(){
                                                                 Seen = update.Seen
                                                             };
