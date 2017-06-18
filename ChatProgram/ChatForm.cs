@@ -7,38 +7,48 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.Http.Formatting;
 
 namespace ChatProgram
 {
     public partial class ChatForm : Form
     {
         private UserClass actualUser = new UserClass();
-        private UserClass chatPartner = new UserClass();
-        private List<UserClass> contactList = new List<UserClass>();
+        private List<String> contactList = new List<String>();
+        private string userSID;
+        private string chatPartner;
 
         public ChatForm()
         {
             InitializeComponent();
         }
 
-        internal void Build(List<UserClass> contactList, UserClass actualUser)
+        internal void Build(string userSID)
         {
-            this.actualUser = actualUser;
-            this.contactList = contactList;
-            
+            this.userSID = userSID;
+
+            ContactsLoad();           
             for (int i = 0; i < contactList.Count; i++)
             {
-                lstContacts.Items.Add(contactList[i].UserName);
+                lstContacts.Items.Add(contactList[i]);
             }
         }
 
-        
+        private void ContactsLoad()
+        {
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri("http://localhost:16590/");
+            HttpResponseMessage response = client.GetAsync("api/User/'"+userSID+"'/0").Result;
+            contactList = response.Content.ReadAsAsync<List<String>>().Result;
+        }
 
         private void btnChatting_Click(object sender, EventArgs e)
         {
             SelectPartner();
             ChatBoxForm chatBox = new ChatBoxForm();
-            chatBox.Build(actualUser,chatPartner);
+            chatBox.Build(userSID,chatPartner);
             this.Hide();
             chatBox.ShowDialog();
             this.Show();
@@ -54,10 +64,9 @@ namespace ChatProgram
                 string selected = lstContacts.SelectedItem.ToString();
                 for (int i = 0; i < contactList.Count; i++)
                 {
-                    if (contactList[i].UserName == selected)
+                    if (contactList[i] == selected)
                     {
                         chatPartner = contactList[i];
-                        
                     }
                 }
             }
@@ -79,11 +88,19 @@ namespace ChatProgram
 
         private void btnLogout_Click(object sender, EventArgs e)
         {
-
+            Eraser();
             Form1 logIn = new Form1();
             this.Hide();
             logIn.ShowDialog();
             this.Close();
+
+        }
+
+        private void Eraser()
+        {
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri("http://localhost:16590/");
+            HttpResponseMessage response = client.DeleteAsync("api/User/'" + userSID + "'/0").Result;
         }
     }
 }

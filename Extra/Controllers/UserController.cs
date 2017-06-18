@@ -11,24 +11,28 @@ namespace API.Controllers
 {
     public class UserController : ApiController
     {
-        // GET: api/Default
-        public ArrayList Get()
+        // GET: api/Default 
+        [Route("api/User/{UserSID}/{zero}")]
+        public List<string> Get(string UserSID, int zero)
         {
-            UserPer up = new UserPer();
-            return up.getUsers();
+            UserPer user = new UserPer();
+            return user.getUsers(UserSID);          
         }
-
+        [Route("api/User/{UserSID}/{zero}/{one}")]
         // GET: api/Default/5
-        public UserClass Get(long id)
+        public string Get(string UserSID, int zero, int one)
         {
             UserPer up = new UserPer();
-            UserClass user = up.getUser(id);
-            return user;
+            return up.getUser(UserSID);
         }
 
         // POST: api/Default
-        public void Post([FromBody]string value)
+        [Route("api/User/{userName}/{password}")]
+        public string Post(string userName, string password)
         {
+            UserPer up = new UserPer();
+            string sessionID = up.postSID(userName, password);
+            return sessionID;
         }
 
         // PUT: api/Default/5
@@ -37,8 +41,11 @@ namespace API.Controllers
         }
 
         // DELETE: api/Default/5
-        public void Delete(int id)
+        [Route("api/User/{SID}/{zero}")]
+        public void Delete(string SID, int zero, [FromBody]int value)
         {
+            UserPer u = new UserPer();
+            u.DeleteSID(SID);
         }
     }
 }

@@ -12,7 +12,7 @@ namespace ChatProgram
         public String UserName { get; set; }
         public String Password { get; set; }
 
-
+        public String SessionID { get; set; }
 
     }
 }

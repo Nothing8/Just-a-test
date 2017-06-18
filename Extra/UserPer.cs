@@ -29,46 +29,127 @@ namespace API
 
         }
 
-        public UserClass getUser(long ID)
+        public string getUser(string UserSID)
         {
-
-            UserClass u = new UserClass();
-            MySql.Data.MySqlClient.MySqlDataReader mySqlReader = null;
-
-            String sqlString = "SELECT * FROM userstable WHERE ID = " + ID.ToString();
-            MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(sqlString, connection);
-
-            mySqlReader = command.ExecuteReader();
-            if (mySqlReader.Read())
+            
+            string username = "";
+            if (SIDauth(UserSID))
             {
-                u.ID = mySqlReader.GetInt64(0);
-                u.UserName = mySqlReader.GetString(1);
-                u.Password = mySqlReader.GetString(2);
-                return u;
+
+
+                MySql.Data.MySqlClient.MySqlDataReader mySqlReader = null;
+
+                String sqlString = "SELECT * FROM userstable WHERE SID = " + UserSID;
+                MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(sqlString, connection);
+
+                mySqlReader = command.ExecuteReader();
+                if (mySqlReader.Read())
+                {
+                    username = mySqlReader.GetString(1);               
+                }
+               
             }
-            else { return null; }
+            return username;
         }
 
-        public ArrayList getUsers()
+        public List<string> getUsers(string UserSID)
         {
-            ArrayList usersAlist = new ArrayList();
-
-
-            MySql.Data.MySqlClient.MySqlDataReader mySqlreader = null;
-            string sqlString = "SELECT * FROM userstable";
-            MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(sqlString, connection);
-
-            mySqlreader = command.ExecuteReader();
-            while (mySqlreader.Read())
+            List<string> usersAlist = new List<string>();
+            if (SIDauth(UserSID))
             {
-                UserClass user = new UserClass();
-                user.ID = mySqlreader.GetInt32(0);
-                user.UserName = mySqlreader.GetString(1);
-                user.Password = mySqlreader.GetString(2);
-                usersAlist.Add(user);
+                MySql.Data.MySqlClient.MySqlDataReader mySqlreader = null;
+                string sqlString = "SELECT * FROM userstable WHERE SID = "+"''";
+                MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(sqlString, connection);
+
+                mySqlreader = command.ExecuteReader();
+                while (mySqlreader.Read())
+                {
+                    usersAlist.Add(mySqlreader.GetString(1));
+                }
+                
             }
             return usersAlist;
+            
+        }
 
+        public String postSID(string userName, string password)
+        {
+            MySql.Data.MySqlClient.MySqlDataReader mySqlreader = null;
+            string mySqlString = "SELECT * FROM userstable WHERE UserName = " + userName + " AND Password = " + password;
+            MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(mySqlString, connection);
+
+            UserClass userSID = new UserClass();
+
+            mySqlreader = command.ExecuteReader();
+            if (mySqlreader.Read())
+            {
+                string sessionId = Guid.NewGuid().ToString();
+                userSID.ID = mySqlreader.GetInt32(0);
+                userSID.UserName = mySqlreader.GetString(1);
+                userSID.Password = mySqlreader.GetString(2);
+                userSID.SessionID = sessionId;
+            }
+            mySqlreader.Close();
+            if (userSID.SessionID != "")
+            {
+                SaveSID(userSID);
+                return userSID.SessionID;
+            }
+            else return "";
+        }
+
+        public void SaveSID(UserClass userSID)
+        {
+            MySql.Data.MySqlClient.MySqlDataReader mySqlReader = null;
+            String sqlString2 = "SELECT * FROM userstable WHERE ID = " + userSID.ID.ToString();
+            MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(sqlString2, connection);
+            mySqlReader = command.ExecuteReader();
+            if (mySqlReader.Read())
+                {
+                 mySqlReader.Close();
+                sqlString2 = "UPDATE userstable SET SID = '" + userSID.SessionID + "' WHERE ID = " + userSID.ID.ToString();
+                 command = new MySql.Data.MySqlClient.MySqlCommand(sqlString2, connection);
+
+                 command.ExecuteNonQuery();
+                }
+
+
+        }
+
+        public void DeleteSID(string SID)
+        {
+            if (SIDauth(SID))
+            {
+                MySql.Data.MySqlClient.MySqlDataReader mySqlReader = null;
+                String sqlString3 = "SELECT * FROM userstable WHERE SID = " + SID;
+                MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(sqlString3, connection);
+                mySqlReader = command.ExecuteReader();
+                if (mySqlReader.Read())
+                {
+                    mySqlReader.Close();
+                    string emptyString = "";
+                    sqlString3 = "UPDATE userstable SET SID = '" + emptyString + "'";
+                    command = new MySql.Data.MySqlClient.MySqlCommand(sqlString3, connection);
+
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public bool SIDauth(string SID)
+        {
+            
+                MySql.Data.MySqlClient.MySqlDataReader mySqlReader = null;
+                String sqlString = "SELECT * FROM userstable WHERE SID = " + SID;
+                MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(sqlString, connection);
+                mySqlReader = command.ExecuteReader();
+                if (mySqlReader.Read())
+                {
+                    mySqlReader.Close();
+                    return true;
+                
+            }
+            else return false;
         }
 
     }

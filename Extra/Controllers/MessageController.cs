@@ -13,33 +13,38 @@ namespace API.Controllers
     public class MessageController : ApiController
     {
         // GET: api/Message
-        public ArrayList Get()
+        [Route("api/Message/{UserSID}/{user}/{user2}/{zero}")]
+        public ArrayList Get(string userSID, string user, string user2, int zero)
         {
+
             MessagePer mp = new MessagePer();
-            return mp.getMessages();
+            return mp.getMessages(userSID,user,user2);
 
         }
 
         // GET: api/Message/5
-        public string Get(int id)
-        {
-            return "value";
-        }
+        //public MessageClass Get(int id)
+        //{
+        //    MessagePer mp = new MessagePer();
+        //    MessageClass message = mp.getMessage(id);
+        //    return message;
+        //}
 
         // POST: api/Message
-        public void Post(MessageClass value)
+        [Route("api/Message/{userSID}/")]
+        public void Post(String userSID, [FromBody]MessageClass value)
         {
             MessagePer mp = new MessagePer();
             long id;
-            id = mp.saveMessage(value);
+            id = mp.saveMessage(userSID,value);
         }
 
         // PUT: api/Message/5
-        public HttpResponseMessage Put(int id, [FromBody]MessageClass value)
+        public HttpResponseMessage Put(int id, string userSID, [FromBody]MessageClass value)
         {
             MessagePer mp = new MessagePer();
             bool messageExists = false;
-            messageExists = mp.SawMessage(id, value);
+            messageExists = mp.SawMessage(id,userSID, value);
 
             HttpResponseMessage response;
             if (messageExists)
