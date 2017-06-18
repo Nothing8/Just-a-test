@@ -192,7 +192,9 @@ namespace ChatProgram
         }
 
         private void MessageSeen(MessageClass update)
-        {
+        { 
+
+
             MessageClass updatedMessage = new MessageClass(){
                                                                 Seen = update.Seen
                                                             };
