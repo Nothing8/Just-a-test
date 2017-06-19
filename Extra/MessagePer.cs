@@ -79,9 +79,11 @@ namespace API
         }
 
         public bool SawMessage(long ID, string userSID, MessageClass mess)
-        {
-            if (SIDauth(userSID))
-            {
+        { 
+                    string userString = getUser(userSID);
+                    if (SIDauth(userSID))
+                    {
+                if (mess.Receiver == userString)
                 {
                     MySql.Data.MySqlClient.MySqlDataReader mySqlReader = null;
                     String sqlString = "SELECT * FROM messages WHERE ID = " + ID.ToString();
@@ -98,6 +100,7 @@ namespace API
                     }
                     else return false;
                 }
+                else return false;
 
             }
             else return false;
@@ -106,19 +109,27 @@ namespace API
            public long saveMessage(String SID,MessageClass messageForSending)
                 {
             long ID = 0;
+            string userString = getUser(SID);
+            
             if (SIDauth(SID))
             {
-                String sqlString = "INSERT INTO messages(message, sender, receiver, seen) VALUES ('" + messageForSending.Message + "','" + messageForSending.Sender + "','" + messageForSending.Receiver + "'," + messageForSending.Seen + ")";
-                MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(sqlString, connection2);
-                command.ExecuteNonQuery();
-                ID = command.LastInsertedId;
-                
+                if (userString == messageForSending.Sender)
+                {
+
+                    {
+                        String sqlString = "INSERT INTO messages(message, sender, receiver, seen) VALUES ('" + messageForSending.Message + "','" + messageForSending.Sender + "','" + messageForSending.Receiver + "'," + messageForSending.Seen + ")";
+                        MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(sqlString, connection2);
+                        command.ExecuteNonQuery();
+                        ID = command.LastInsertedId;
+                    }
+                }
             }
             return ID;
                 }
 
         public bool SIDauth(string SID)
         {
+            
             MySql.Data.MySqlClient.MySqlDataReader mySqlReader = null;
             String sqlString = "SELECT * FROM userstable WHERE SID = " + SID;
             MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(sqlString, connection2);
@@ -129,6 +140,24 @@ namespace API
                 return true;
             }
             else return false;
+        }
+
+        public string getUser(string UserSID)
+        {
+
+            string username = "";
+                MySql.Data.MySqlClient.MySqlDataReader mySqlReader = null;
+
+                String sqlString = "SELECT * FROM userstable WHERE SID = " + UserSID;
+                MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(sqlString, connection2);
+
+                mySqlReader = command.ExecuteReader();
+                if (mySqlReader.Read())
+                {
+                    username = mySqlReader.GetString(1);
+                    mySqlReader.Close();
+                }
+            return username;
         }
 
     }
