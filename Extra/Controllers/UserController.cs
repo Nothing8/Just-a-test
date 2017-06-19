@@ -13,14 +13,14 @@ namespace API.Controllers
     {
         // GET: api/Default 
         [Route("api/User/{UserSID}/{zero}")]
-        public List<string> Get(string UserSID, int zero)
+        public List<string> Get(string UserSID, int zero) // Mit csinál a "zero"?
         {
             UserPer user = new UserPer();
             return user.getUsers(UserSID);          
         }
         [Route("api/User/{UserSID}/{zero}/{one}")]
         // GET: api/Default/5
-        public string Get(string UserSID, int zero, int one)
+        public string Get(string UserSID, int zero, int one) // Mit csinál a "zero" és a "one"?
         {
             UserPer up = new UserPer();
             return up.getUser(UserSID);
@@ -35,6 +35,7 @@ namespace API.Controllers
             return sessionID;
         }
 
+        //Ez a függvény fölösleges.
         // PUT: api/Default/5
         public void Put(int id, [FromBody]string value)
         {
@@ -42,7 +43,7 @@ namespace API.Controllers
 
         // DELETE: api/Default/5
         [Route("api/User/{SID}/{zero}")]
-        public void Delete(string SID, int zero, [FromBody]int value)
+        public void Delete(string SID, int zero, [FromBody]int value) // Mit csinál a "zero"?
         {
             UserPer u = new UserPer();
             u.DeleteSID(SID);

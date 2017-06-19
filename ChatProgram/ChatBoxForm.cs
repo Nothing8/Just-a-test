@@ -49,16 +49,18 @@ namespace ChatProgram
            
         }
 
+        //Miért kell újra lekérned a felhasználónevet? Azt már tudod a bejelentkezésből.
         private void UserGet()
         {
             
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri("http://localhost:16590/");
-            HttpResponseMessage response = client.GetAsync("api/User/'" + userSID + "'/0/1").Result;
+            HttpResponseMessage response = client.GetAsync("api/User/'" + userSID + "'/0/1").Result; //Mi az a 0/1 a végén?
             currentUser = response.Content.ReadAsAsync<String>().Result;
             
         }
 
+        //ez a függvény fölösleges
         private void refreshChat()
         {
             throw new NotImplementedException();
@@ -79,6 +81,7 @@ namespace ChatProgram
             rchChat.Text = "";
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri("http://localhost:16590/");
+            //Ha a "currentUser" helyett más felhasználónevet küldök, akkor elolvashatom más üzeneteit?
             HttpResponseMessage response = client.GetAsync("api/Message/'" + userSID + "'/'" + currentUser + "'/'" + chatPartner + "'/0").Result;
             messageList = response.Content.ReadAsAsync<List<MessageClass>>().Result;
             int MessageCount = messageList.Count;
@@ -147,6 +150,7 @@ namespace ChatProgram
              
         }
 
+        //Ez a függvény ugyanaz mint a "LoadMessages"
         private void RefreshMessages()
         {
             HttpClient client = new HttpClient();
@@ -186,6 +190,7 @@ namespace ChatProgram
                 if (messageList[i].Sender == chatPartner && messageList[i].Seen == false)
                 {
                     messageList[i].Seen = true; 
+                    //Nem lenne elég egyszer meghívni a "MessageSeen"-t?
                     MessageSeen(messageList[i]);
                 }
             }
@@ -202,6 +207,7 @@ namespace ChatProgram
 
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri("http://localhost:16590/");
+            //ebben a hívásban mi a funkciója az "updatedMessage"-nek?
             HttpResponseMessage response = client.PutAsJsonAsync("api/Message/"+update.ID+"/'"+userSID+"'", updatedMessage).Result;
         }
 

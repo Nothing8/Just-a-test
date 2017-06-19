@@ -14,6 +14,7 @@ namespace API
 
         public UserPer()
         {
+            //Az adatbázis kapcsolatot ugyanúgy inicializálod mint a "MassagePer" osztályban. Miért nem csinálsz egy ősosztályt?
             string connectionStr;
             connectionStr = "server=127.0.0.1;uid=test2;pwd=password;database=tasktable";
             try
@@ -52,6 +53,7 @@ namespace API
             return username;
         }
 
+        //Ez csak a be nem jelentkezett felhasználókat listázza ki. Ez szándékos?
         public List<string> getUsers(string UserSID)
         {
             List<string> usersAlist = new List<string>();
@@ -72,6 +74,8 @@ namespace API
             
         }
 
+        //Mi történik ha felhasználónévnek megadom, hogy "peti--" és egy tetszőleges jelszót? (Feltételezve, hogy van "peti" nevű felhasználónk.)
+        //Mi történik, ha felhasználónévnek azt adom, hogy "peti; DROP TABLE userstable--" ?
         public String postSID(string userName, string password)
         {
             MySql.Data.MySqlClient.MySqlDataReader mySqlreader = null;
@@ -100,6 +104,7 @@ namespace API
 
         public void SaveSID(UserClass userSID)
         {
+            //Ez a SELECT fölösleges.
             MySql.Data.MySqlClient.MySqlDataReader mySqlReader = null;
             String sqlString2 = "SELECT * FROM userstable WHERE ID = " + userSID.ID.ToString();
             MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(sqlString2, connection);
@@ -120,6 +125,7 @@ namespace API
         {
             if (SIDauth(SID))
             {
+                //Ez a SELECT fölösleges.
                 MySql.Data.MySqlClient.MySqlDataReader mySqlReader = null;
                 String sqlString3 = "SELECT * FROM userstable WHERE SID = " + SID;
                 MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(sqlString3, connection);
@@ -136,6 +142,7 @@ namespace API
             }
         }
 
+        //Ez ugyanaz mint a MessagePer.SIDAuth. Miért nem csinálsz egy ősosztályt?
         public bool SIDauth(string SID)
         {
             

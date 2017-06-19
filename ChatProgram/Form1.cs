@@ -13,9 +13,10 @@ using System.Net.Http.Formatting;
 
 namespace ChatProgram
 {
+    // Ennek az osztálynak lehetne valami tisztességes neve. (pl. LoginForm)
     public partial class Form1 : Form
     {
-        
+        //Ez sehol sincs használva.
         static List<UserClass> userlist = new List<UserClass>();
 
         private string userSID = "";
@@ -45,6 +46,7 @@ namespace ChatProgram
         }
 
 
+        //Ennek egyszerűenk vissza kall térnie igazzal vagy hamissal. A "ver" változó fölösleges.
         private void Verification()
         {
 
@@ -66,7 +68,7 @@ namespace ChatProgram
                 
             
 
-
+        //nincs lekezelve a sikertelen bejelentkezés
         private void UserLoad()
         {
             HttpClient client = new HttpClient();
@@ -79,7 +81,7 @@ namespace ChatProgram
         
 
         
-
+        // Ez a függvény fölösleges.
         private void Form1_Load(object sender, EventArgs e)
         {
            
@@ -103,6 +105,7 @@ namespace ChatProgram
 
         private void AuthplusVer()
         {
+            //előbb próbálod betölteni a felhasználót, és csak utána ellenőrzöd le, hogy a felhasználónév és jelszó ki van-e töltve. Ez így jelenleg tetszőleges felhasználónévvel és jelszóval beenged.
             UserLoad();
             Verification();
             if (ver == true) { MessageBox.Show("Sikeres bejelentkezés!"); OpenProgram(); }

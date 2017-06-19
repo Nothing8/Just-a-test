@@ -14,13 +14,15 @@ namespace API.Controllers
     {
         // GET: api/Message
         [Route("api/Message/{UserSID}/{user}/{user2}/{zero}")]
-        public ArrayList Get(string userSID, string user, string user2, int zero)
+        public ArrayList Get(string userSID, string user, string user2, int zero) // Mit csinaál a "zero"?
         {
-
+            //a userSID ellenőrzését valójában itt a controllerben kellene elvégzni.
             MessagePer mp = new MessagePer();
             return mp.getMessages(userSID,user,user2);
 
         }
+       
+        //Kikommentezett függvényeket ne hagyj a kódban!
 
         // GET: api/Message/5
         //public MessageClass Get(int id)

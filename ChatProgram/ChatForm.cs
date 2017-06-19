@@ -15,6 +15,7 @@ namespace ChatProgram
 {
     public partial class ChatForm : Form
     {
+        //Ez sehol sincs használva.
         private UserClass actualUser = new UserClass();
         private List<String> contactList = new List<String>();
         private string userSID;
@@ -40,7 +41,7 @@ namespace ChatProgram
         {
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri("http://localhost:16590/");
-            HttpResponseMessage response = client.GetAsync("api/User/'"+userSID+"'/0").Result;
+            HttpResponseMessage response = client.GetAsync("api/User/'"+userSID+"'/0").Result; //Mi az a 0 a végén?
             contactList = response.Content.ReadAsAsync<List<String>>().Result;
         }
 
@@ -62,6 +63,7 @@ namespace ChatProgram
             {
                 
                 string selected = lstContacts.SelectedItem.ToString();
+                //A ciklus helyett ha egyszerűen azt írnád, hogy "chatPartner = selected" ?
                 for (int i = 0; i < contactList.Count; i++)
                 {
                     if (contactList[i] == selected)
@@ -100,7 +102,7 @@ namespace ChatProgram
         {
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri("http://localhost:16590/");
-            HttpResponseMessage response = client.DeleteAsync("api/User/'" + userSID + "'/0").Result;
+            HttpResponseMessage response = client.DeleteAsync("api/User/'" + userSID + "'/0").Result; //Mi az a 0 a végén?
         }
     }
 }
